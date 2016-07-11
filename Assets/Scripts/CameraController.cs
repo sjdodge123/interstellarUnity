@@ -62,9 +62,8 @@ public class CameraController : MonoBehaviour
 
         if (numTargets > 0)
             averagePos /= numTargets;
-
+    
         averagePos.y = transform.position.y;
-
         m_DesiredPosition = averagePos;
     }
 
