@@ -1,31 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlanetController : MonoBehaviour
 {
     public float gravityConstant;
     public float gravityRadius;
+
     private Rigidbody2D myBody;
     private CircleCollider2D gravityWell;
 
     void Start()
     {
         myBody = GetComponent<Rigidbody2D>();
-        gravityWell = gameObject.AddComponent<CircleCollider2D>();
-        gravityWell.offset.Set(0, 0);
-        gravityWell.isTrigger = true;
-        gravityWell.enabled = true;
-        gravityWell.radius = gravityRadius;
     }
 
-    public void OnTriggerStay2D(Collider2D other)
+    void FixedUpdate()
     {
-        Rigidbody2D otherBody = other.GetComponent<Rigidbody2D>();
-        Vector3 distance = other.transform.position - transform.position;
-        if (distance.sqrMagnitude > 0)
+        Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, gravityRadius);
+        
+        
+        foreach (Collider2D coll in collisions)
         {
-            float force = -gravityConstant * otherBody.mass * myBody.mass / distance.sqrMagnitude;
-            otherBody.AddForce(distance.normalized * force);
+            Rigidbody2D otherBody = coll.attachedRigidbody;
+
+            if (otherBody != null && otherBody != myBody)
+            {
+                Vector3 distance = otherBody.transform.position - transform.position;
+                if (distance.sqrMagnitude > 0)
+                {
+
+                    float force = -gravityConstant * otherBody.mass * myBody.mass / distance.sqrMagnitude;
+                    otherBody.AddForce(distance.normalized * force);
+                }
+            }
         }
     }
 }
