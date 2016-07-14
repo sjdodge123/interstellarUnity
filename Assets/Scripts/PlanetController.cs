@@ -18,8 +18,6 @@ public class PlanetController : MonoBehaviour
     void FixedUpdate()
     {
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, gravityRadius);
-        
-        
         foreach (Collider2D coll in collisions)
         {
             Rigidbody2D otherBody = coll.attachedRigidbody;
@@ -29,7 +27,6 @@ public class PlanetController : MonoBehaviour
                 Vector3 distance = otherBody.transform.position - transform.position;
                 if (distance.sqrMagnitude > 0)
                 {
-
                     float force = -GameVars.GravityConstant * otherBody.mass * myBody.mass / distance.sqrMagnitude;
                     otherBody.AddForce(distance.normalized * force);
                 }
