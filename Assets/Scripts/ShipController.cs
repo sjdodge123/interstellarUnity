@@ -5,6 +5,8 @@ using System;
 
 public class ShipController : MonoBehaviour {
 
+    public GameObject bullet;
+
     public float speed;
     public float rotateSpeed;
     public float pulseRadius;
@@ -50,28 +52,31 @@ public class ShipController : MonoBehaviour {
 
         if (fire3Held)
         {
-            Debug.Log("Draw3");
+            //Debug.Log("Draw3");
         }
         else if (fire1Held)
         {
-            Debug.Log("Draw1");
+            //Debug.Log("Draw1");
         }
         else if (fire2Held)
         {
-            Debug.Log("Draw2");
+            //Debug.Log("Draw2");
         }
 
         if (fire3LetGo || (fire1LetGo && fire2LetGo))
         {
-            Debug.Log("Fire3");
+            var shot = (GameObject)Instantiate(bullet, transform.up * 5 + transform.position, transform.rotation);
+            shot.GetComponent<Rigidbody2D>().velocity = transform.up * 200;
         }
         else if (fire1LetGo)
         {
-            Debug.Log("Fire1");
+            var shot = (GameObject)Instantiate(bullet, transform.right *3 + transform.position, transform.rotation * Quaternion.Euler(0,0,-90f));
+            shot.GetComponent<Rigidbody2D>().velocity = transform.right * 50;
         }
         else if (fire2LetGo)
         {
-            Debug.Log("Fire2");
+            var shot = (GameObject)Instantiate(bullet, -transform.right * 3 + transform.position, transform.rotation * Quaternion.Euler(0, 0, 90f));
+            shot.GetComponent<Rigidbody2D>().velocity = -transform.right * 50;
         }
 
         
