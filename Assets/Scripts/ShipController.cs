@@ -39,12 +39,45 @@ public class ShipController : MonoBehaviour {
             Pulse();
         }
 
-        if(haloBool == true && (Time.time - haloTimeStamp) > haloTimer)
+        bool fire1Held = Input.GetButton("Fire1");
+        bool fire2Held = Input.GetButton("Fire2");
+        bool fire3Held = Input.GetButton("Fire1") && Input.GetButton("Fire2");
+
+        
+        bool fire1LetGo = !fire1Held && Input.GetButtonUp("Fire1");
+        bool fire2LetGo = !fire2Held && Input.GetButtonUp("Fire2");
+        bool fire3LetGo = !fire1Held && !fire2Held && (Input.GetButtonUp("Fire1") && Input.GetButtonUp("Fire2"));
+
+        if (fire3Held)
         {
-            halo.GetType().GetProperty("enabled").SetValue(halo, false, null);
-            haloBool = false;
+            Debug.Log("Draw3");
         }
-            
+        else if (fire1Held)
+        {
+            Debug.Log("Draw1");
+        }
+        else if (fire2Held)
+        {
+            Debug.Log("Draw2");
+        }
+
+        if (fire3LetGo || (fire1LetGo && fire2LetGo))
+        {
+            Debug.Log("Fire3");
+        }
+        else if (fire1LetGo)
+        {
+            Debug.Log("Fire1");
+        }
+        else if (fire2LetGo)
+        {
+            Debug.Log("Fire2");
+        }
+
+        
+
+
+
     }
 
     private void Pulse()
@@ -53,7 +86,12 @@ public class ShipController : MonoBehaviour {
         haloBool = true;
         haloTimeStamp = Time.time;
         nextPulse = Time.time + pulseRate;
-        GameEvents.GeneratePulse(body.position, pulseStrength, pulseRadius, body, false);   
+        GameEvents.GeneratePulse(body.position, pulseStrength, pulseRadius, body, false);
+        if (haloBool == true && (Time.time - haloTimeStamp) > haloTimer)
+        {
+            halo.GetType().GetProperty("enabled").SetValue(halo, false, null);
+            haloBool = false;
+        }
     }
 
     private void UsePlayerControls()

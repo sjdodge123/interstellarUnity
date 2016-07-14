@@ -58,8 +58,9 @@ public class LineController : MonoBehaviour {
 
             position += velocity * timeDelta + gravContr * timeDelta * timeDelta;
             RaycastHit2D cast = Physics2D.Linecast(lastPosition, position);
-            if (cast.collider != null && !cast.rigidbody.gameObject.CompareTag("Player"))
+            if (cast.collider != null && cast.rigidbody.gameObject.CompareTag("Planet"))
             {
+                ResetLine();
                 lineRend.SetVertexCount(i);
                 break;
             }
@@ -86,7 +87,6 @@ public class LineController : MonoBehaviour {
         fadeTime = Time.time + fadeRate;
         if (!lineRend.enabled)
         {
-
             lineRend.enabled = true;
         }
         fadePercent = 0f;
