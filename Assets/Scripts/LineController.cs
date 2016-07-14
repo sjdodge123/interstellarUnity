@@ -41,8 +41,15 @@ public class LineController : MonoBehaviour {
             {
                 gravContr += GetPlanetGravity(planet, position);
             }
+            var lastPosition = position;
 
             position += velocity * timeDelta + gravContr * timeDelta * timeDelta;
+            RaycastHit2D cast = Physics2D.Linecast(lastPosition, position);
+            if (cast.collider != null && !cast.rigidbody.gameObject.CompareTag("Player"))
+            {
+                lineRend.SetVertexCount(i);
+                break;
+            }
             velocity += gravContr * timeDelta;
             
         }
