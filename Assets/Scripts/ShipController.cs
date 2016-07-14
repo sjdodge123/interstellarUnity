@@ -10,6 +10,7 @@ public class ShipController : MonoBehaviour {
     public float speed;
     public float rotateSpeed;
     public float pulseRadius;
+    public int playerNumber;
 
     public float pulseRate = 1F;
     public float nextPulse = 0.0F;
@@ -41,14 +42,14 @@ public class ShipController : MonoBehaviour {
             Pulse();
         }
 
-        bool fire1Held = Input.GetButton("Fire1");
-        bool fire2Held = Input.GetButton("Fire2");
-        bool fire3Held = Input.GetButton("Fire1") && Input.GetButton("Fire2");
+        bool fire1Held = Input.GetButton(playerNumber+"Fire1");
+        bool fire2Held = Input.GetButton(playerNumber+"Fire2");
+        bool fire3Held = Input.GetButton(playerNumber+"Fire1") && Input.GetButton(playerNumber+"Fire2");
 
         
-        bool fire1LetGo = !fire1Held && Input.GetButtonUp("Fire1");
-        bool fire2LetGo = !fire2Held && Input.GetButtonUp("Fire2");
-        bool fire3LetGo = !fire1Held && !fire2Held && (Input.GetButtonUp("Fire1") && Input.GetButtonUp("Fire2"));
+        bool fire1LetGo = !fire1Held && Input.GetButtonUp(playerNumber+"Fire1");
+        bool fire2LetGo = !fire2Held && Input.GetButtonUp(playerNumber+"Fire2");
+        bool fire3LetGo = !fire1Held && !fire2Held && (Input.GetButtonUp(playerNumber+"Fire1") && Input.GetButtonUp(playerNumber+"Fire2"));
 
         if (fire3Held)
         {
@@ -101,12 +102,12 @@ public class ShipController : MonoBehaviour {
 
     private void UsePlayerControls()
     {
-        float horizontalMovement = Input.GetAxis("Horizontal");
+        float horizontalMovement = Input.GetAxis(playerNumber+"Horizontal");
         if (horizontalMovement != 0f)
         {
             transform.Rotate(Vector3.forward * -horizontalMovement * rotateSpeed);
         }
-        float verticalMovement = Input.GetAxis("Vertical");
+        float verticalMovement = Input.GetAxis(playerNumber+"Vertical");
         if (verticalMovement != 0f)
         {
             lineController.ResetLine();
