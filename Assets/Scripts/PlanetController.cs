@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 public class PlanetController : MonoBehaviour
 {
-    public float gravityConstant;
+
     public float gravityRadius;
 
     private Rigidbody2D myBody;
-    private CircleCollider2D gravityWell;
 
-    void Start()
+    void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
+        GameVars.Planets.Add(this);
     }
 
     void FixedUpdate()
@@ -30,10 +30,14 @@ public class PlanetController : MonoBehaviour
                 if (distance.sqrMagnitude > 0)
                 {
 
-                    float force = -gravityConstant * otherBody.mass * myBody.mass / distance.sqrMagnitude;
+                    float force = -GameVars.GravityConstant * otherBody.mass * myBody.mass / distance.sqrMagnitude;
                     otherBody.AddForce(distance.normalized * force);
                 }
             }
         }
+    }
+    public Rigidbody2D GetRigidBody()
+    {
+        return myBody;
     }
 }

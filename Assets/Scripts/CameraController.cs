@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class CameraController : MonoBehaviour
     public float m_ScreenEdgeBuffer = 4f;
     public float m_MinSize = 6.5f;
 
-    public Transform[] m_Targets;
+    private List<GameObject> m_Targets = new List<GameObject>();
 
     private float m_ZoomSpeed;
     private Vector3 m_DesiredPosition;
@@ -22,14 +23,17 @@ public class CameraController : MonoBehaviour
         m_Camera = GetComponentInChildren<Camera>();
     }
 
-    
-
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    transform.position = player.transform.position + offset;
-    //}
-
+    void Start()
+    {
+        for (var i = 0; i < GameVars.Planets.Count; i++)
+        {
+            m_Targets.Add(GameVars.Planets[i].gameObject);
+        }
+        for (var j = 0; j < GameVars.Ships.Count; j++)
+        {
+            m_Targets.Add(GameVars.Ships[j].gameObject);
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -51,12 +55,12 @@ public class CameraController : MonoBehaviour
         Vector3 averagePos = new Vector3();
         int numTargets = 0;
 
-        for (int i = 0; i < m_Targets.Length; i++)
+        for (int i = 0; i < m_Targets.Count; i++)
         {
-            if (!m_Targets[i].gameObject.activeSelf)
+            if (!m_Targets[i].activeSelf)
                 continue;
 
-            averagePos += m_Targets[i].position;
+            averagePos += m_Targets[i].transform.position;
             numTargets++;
         }
 
@@ -81,12 +85,12 @@ public class CameraController : MonoBehaviour
 
         float size = 0f;
 
-        for (int i = 0; i < m_Targets.Length; i++)
+        for (int i = 0; i < m_Targets.Count; i++)
         {
-            if (!m_Targets[i].gameObject.activeSelf)
+            if (!m_Targets[i].activeSelf)
                 continue;
 
-            Vector3 targetLocalPos = transform.InverseTransformPoint(m_Targets[i].position);
+            Vector3 targetLocalPos = transform.InverseTransformPoint(m_Targets[i].transform.position);
 
             Vector3 desiredPosToTarget = targetLocalPos - desiredLocalPos;
 

@@ -5,51 +5,59 @@ using System;
 
 public class LineController : MonoBehaviour {
 
-    public GameObject ship;
-    public PlanetController planetController;
-    public GameObject planet;
+    
     public int intSteps;
-    private Rigidbody2D planetBody;
     private Rigidbody2D shipBody;
     private LineRenderer lineRend;
-
 	// Use this for initialization
 	void Start () {
         lineRend = GetComponent<LineRenderer>();
-        planetBody = planet.GetComponent<Rigidbody2D>();
-        shipBody = ship.GetComponent<Rigidbody2D>();
+        shipBody = GetComponentInParent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void FixedUpdate () {
         if(shipBody.velocity.sqrMagnitude > 0)
         {
-            UpdateTrajectory(ship.transform.position, shipBody.velocity);
-        } 
+            UpdateTrajectory(shipBody.transform.position, shipBody.velocity);
+        }
 	}
 
     void UpdateTrajectory(Vector3 initialPosition, Vector3 initialVelocity)
     {
-        float timeDelta = Time.deltaTime;
+        float timeDelta = Time.fixedDeltaTime;
 
         lineRend.SetVertexCount(intSteps);
-
+        
         Vector3 position = initialPosition;
         Vector3 velocity = initialVelocity;
+        
         for (int i = 0; i < intSteps; ++i)
         {
+            Vector3 gravContr = Vector3.zero;
             lineRend.SetPosition(i, position);
-
-            Vector3 distance = planet.transform.position - position;
-            Vector3 gravContr = new Vector3();
-            if (distance.sqrMagnitude > 0)
+ 
+            foreach (PlanetController planet in GameVars.Planets)
             {
-                float force = planetController.gravityConstant * shipBody.mass * planetBody.mass / distance.sqrMagnitude;
-                gravContr = distance.normalized * force;
+                gravContr += GetPlanetGravity(planet, position);
             }
 
-            position += velocity * timeDelta + 0.5f * gravContr * timeDelta * timeDelta;
+            position += velocity * timeDelta + gravContr * timeDelta * timeDelta;
             velocity += gravContr * timeDelta;
+            
         }
+    }
+
+    private Vector3 GetPlanetGravity(PlanetController planetController,Vector3 position)
+    {
+        Rigidbody2D planetBody = planetController.GetRigidBody();
+        Vector3 distance = planetBody.transform.position - position;
+        Vector3 gravContr = Vector3.zero;
+        if (distance.magnitude > 0 && distance.magnitude < planetController.gravityRadius)
+        {
+            float accel = GameVars.GravityConstant * planetBody.mass / distance.sqrMagnitude;
+            gravContr = distance.normalized * accel;
+        }
+        return gravContr;
     }
 }

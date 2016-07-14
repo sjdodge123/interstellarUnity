@@ -20,12 +20,11 @@ public class ShipController : MonoBehaviour {
     private Rigidbody2D body;
     private RaycastHit2D[] inRange;
 
-    private CircleCollider2D weaponHalo;
-
     // Use this for initialization
-    void Start () {
+    void Awake () {
         body = GetComponent<Rigidbody2D>();
         halo = GetComponent("Halo");
+        GameVars.Ships.Add(this);
     }
 	
 	// Update is called once per frame
@@ -63,8 +62,6 @@ public class ShipController : MonoBehaviour {
 
                     Vector3 coll = (other.transform.position + (planetColl.radius * -distance.normalized));
                     distance = coll - transform.position;
-                    //distance = coll - transform.position;
-                    Debug.Log(coll);
                     if (distance.sqrMagnitude > 0)
                     {
                         float force = -weaponStrength * body.mass * body.mass / distance.sqrMagnitude;
