@@ -7,12 +7,25 @@ public class LineController : MonoBehaviour {
 
     
     public int intSteps;
+    public Color startColor;
+    public Color endColor;
     private Rigidbody2D shipBody;
     private LineRenderer lineRend;
-	// Use this for initialization
-	void Start () {
+
+    private float fadeRate = 3f;
+    private float fadeTime = 0.0f;
+    private float fadePercent = 0f;
+    private Color lineStart;
+    private Color lineEnd;
+    private Color emptyColor = Color.black - new Color(0, 0, 0, .99f);
+    
+
+    // Use this for initialization
+    void Start () {
         lineRend = GetComponent<LineRenderer>();
         shipBody = GetComponentInParent<Rigidbody2D>();
+        lineStart = startColor;
+        lineEnd = endColor - new Color(0, 0, 0, .95f);
     }
 
     // Update is called once per frame
@@ -66,5 +79,27 @@ public class LineController : MonoBehaviour {
             gravContr = distance.normalized * accel;
         }
         return gravContr;
+    }
+
+    internal void ResetLine()
+    {
+        fadeTime = Time.time + fadeRate;
+        if (!lineRend.enabled)
+        {
+
+            lineRend.enabled = true;
+        }
+        fadePercent = 0f;
+        lineRend.SetColors(lineStart, lineEnd);
+    }
+
+    internal void FadeLine()
+    {
+        fadePercent += .005f;
+        lineRend.SetColors(Color.Lerp(lineStart, emptyColor, fadePercent), Color.Lerp(lineEnd, emptyColor, fadePercent));
+        if (Time.time > fadeTime)
+        {
+            lineRend.enabled = false;
+        }
     }
 }

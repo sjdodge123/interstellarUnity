@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class ShipController : MonoBehaviour {
 
@@ -16,21 +17,28 @@ public class ShipController : MonoBehaviour {
     private float haloTimeStamp;
     private bool haloBool = false;
 
+    private LineController lineController;
     private Component halo;
     private Rigidbody2D body;
     private RaycastHit2D[] inRange;
+
+
+    
 
     // Use this for initialization
     void Awake () {
         body = GetComponent<Rigidbody2D>();
         halo = GetComponent("Halo");
+        lineController= GetComponentInChildren<LineController>();
+
         GameVars.Ships.Add(this);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        transform.Rotate(Vector3.forward * -Input.GetAxis("Horizontal") * rotateSpeed);
-
+        UsePlayerControls();
+       
+       
         //Weapon firing
         if (Input.GetButtonDown("Jump") && Time.time > nextFire)
         {
@@ -50,7 +58,7 @@ public class ShipController : MonoBehaviour {
                         other.rigidbody.AddForce(distance.normalized * force);
                     }
                 }
-                else if(other.rigidbody.gameObject.CompareTag("Planet"))
+                else if (other.rigidbody.gameObject.CompareTag("Planet"))
                 {
                     if (other.collider.isTrigger)
                     {
@@ -68,11 +76,8 @@ public class ShipController : MonoBehaviour {
                         body.AddForce(distance.normalized * force);
                     }
 
-                } 
+                }
             }
-
-
-            //GameObject clone = Instantiate(projectile, transform.position, transform.rotation) as GameObject;
             
         }
 
@@ -81,14 +86,25 @@ public class ShipController : MonoBehaviour {
             halo.GetType().GetProperty("enabled").SetValue(halo, false, null);
             haloBool = false;
         }
-
-
             
     }
 
-
-    void FixedUpdate()
+    private void UsePlayerControls()
     {
-        body.AddForce(transform.up * speed * Input.GetAxis("Vertical"));
+        float horizontalMovement = Input.GetAxis("Horizontal");
+        if (horizontalMovement != 0f)
+        {
+            transform.Rotate(Vector3.forward * -horizontalMovement * rotateSpeed);
+        }
+        float verticalMovement = Input.GetAxis("Vertical");
+        if (verticalMovement != 0f)
+        {
+            lineController.ResetLine();
+            body.AddForce(transform.up * speed * verticalMovement);
+        }
+        else 
+        {
+            lineController.FadeLine();
+        }
     }
 }
