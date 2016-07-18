@@ -25,10 +25,12 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        
         for (var i = 0; i < GameVars.Planets.Count; i++)
         {
             m_Targets.Add(GameVars.Planets[i].gameObject);
         }
+        
         for (var j = 0; j < GameVars.Ships.Count; j++)
         {
             m_Targets.Add(GameVars.Ships[j].gameObject);

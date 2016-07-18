@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class LineController : MonoBehaviour {
+public class LineController : MonoBehaviour
+{
 
-    
+
     public int intSteps;
     public Color startColor;
     public Color endColor;
@@ -15,41 +16,47 @@ public class LineController : MonoBehaviour {
     private float fadeRate = 3f;
     private float fadeTime = 0.0f;
     private float fadePercent = 0f;
-    private Color lineStart;
-    private Color lineEnd;
-    private Color emptyColor = Color.black - new Color(0, 0, 0, .99f);
-    
+    private Color emptyStart;
+    private Color emptyEnd;
 
     // Use this for initialization
-    void Start () {
-        lineRend = GetComponent<LineRenderer>();
-        shipBody = GetComponentInParent<Rigidbody2D>();
-        lineStart = startColor;
-        lineEnd = endColor - new Color(0, 0, 0, .95f);
+    void Start()
+    {
+        
     }
 
+    public void OnEnable()
+    {
+        lineRend = GetComponent<LineRenderer>();
+        shipBody = GetComponentInParent<Rigidbody2D>();
+        emptyStart = new Color(startColor.r, startColor.g, startColor.b, 0f);
+        emptyEnd = new Color(endColor.r, endColor.g, endColor.b, 0f);
+    }
+
+
     // Update is called once per frame
-    void FixedUpdate () {
-        if(shipBody.velocity.sqrMagnitude > 0)
+    void FixedUpdate()
+    {
+        if (shipBody.velocity.sqrMagnitude > 0)
         {
             UpdateTrajectory(shipBody.transform.position, shipBody.velocity);
         }
-	}
+    }
 
-    void UpdateTrajectory(Vector3 initialPosition, Vector3 initialVelocity)
+    public void UpdateTrajectory(Vector3 initialPosition, Vector3 initialVelocity)
     {
         float timeDelta = Time.fixedDeltaTime;
 
         lineRend.SetVertexCount(intSteps);
-        
+
         Vector3 position = initialPosition;
         Vector3 velocity = initialVelocity;
-        
+
         for (int i = 0; i < intSteps; ++i)
         {
             Vector3 gravContr = Vector3.zero;
             lineRend.SetPosition(i, position);
- 
+
             foreach (PlanetController planet in GameVars.Planets)
             {
                 gravContr += GetPlanetGravity(planet, position);
@@ -65,11 +72,11 @@ public class LineController : MonoBehaviour {
                 break;
             }
             velocity += gravContr * timeDelta;
-            
+
         }
     }
 
-    private Vector3 GetPlanetGravity(PlanetController planetController,Vector3 position)
+    private Vector3 GetPlanetGravity(PlanetController planetController, Vector3 position)
     {
         Rigidbody2D planetBody = planetController.GetRigidBody();
         Vector3 distance = planetBody.transform.position - position;
@@ -90,13 +97,13 @@ public class LineController : MonoBehaviour {
             lineRend.enabled = true;
         }
         fadePercent = 0f;
-        lineRend.SetColors(lineStart, lineEnd);
+        lineRend.SetColors(startColor, endColor);
     }
 
     internal void FadeLine()
     {
-        fadePercent += .005f;
-        lineRend.SetColors(Color.Lerp(lineStart, emptyColor, fadePercent), Color.Lerp(lineEnd, emptyColor, fadePercent));
+        fadePercent += .010f;
+        lineRend.SetColors(Color.Lerp(startColor, emptyStart, fadePercent), Color.Lerp(endColor, emptyEnd, fadePercent));
         if (Time.time > fadeTime)
         {
             lineRend.enabled = false;
