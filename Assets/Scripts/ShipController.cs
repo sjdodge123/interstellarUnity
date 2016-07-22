@@ -19,6 +19,12 @@ public class ShipController : MonoBehaviour
     public float nextPulse = 0.0F;
     public float pulseStrength;
 
+    private float antiGravRate = 1f;
+    private float nextAntiGrav = 0.0f;
+    private float antiGravDuration = 2f;
+    private float antiGravDurationEnd = 0.0f;
+
+
     private float bulletSpeed = 50f;
 
     public float haloTimer;
@@ -48,7 +54,6 @@ public class ShipController : MonoBehaviour
     void Update()
     {
         UsePlayerControls();
-
         //Pulse Cannon
         if (Input.GetButtonDown("Jump") && Time.time > nextPulse)
         {
@@ -57,14 +62,26 @@ public class ShipController : MonoBehaviour
 
         bool fire1Held = Input.GetButton(playerNumber + "Fire1");
         bool fire2Held = Input.GetButton(playerNumber + "Fire2");
-        bool fire3Held = Input.GetButton(playerNumber + "Fire1") && Input.GetButton(playerNumber + "Fire2");
+        bool fire3Held = Input.GetButton(playerNumber + "Fire3");
+        bool fire4Held = Input.GetButton(playerNumber + "Fire1") && Input.GetButton(playerNumber + "Fire2");
+
 
 
         bool fire1LetGo = !fire1Held && Input.GetButtonUp(playerNumber + "Fire1");
         bool fire2LetGo = !fire2Held && Input.GetButtonUp(playerNumber + "Fire2");
-        bool fire3LetGo = !fire1Held && !fire2Held && (Input.GetButtonUp(playerNumber + "Fire1") && Input.GetButtonUp(playerNumber + "Fire2"));
+        bool fire3LetGo = !fire3Held && Input.GetButtonUp(playerNumber + "Fire3");
+        bool fire4LetGo = !fire1Held && !fire2Held && (Input.GetButtonUp(playerNumber + "Fire1") && Input.GetButtonUp(playerNumber + "Fire2"));
 
-        if (fire3Held)
+
+
+
+        if (fire3LetGo)
+        {
+            AntiGravity();
+        }
+
+
+        if (fire4Held)
         {
             //Debug.Log("Draw3");
         }
@@ -78,7 +95,7 @@ public class ShipController : MonoBehaviour
             //Debug.Log("Draw2");
         }
 
-        if (fire3LetGo || (fire1LetGo && fire2LetGo))
+        if (fire4LetGo || (fire1LetGo && fire2LetGo))
         {
             var shot = Instantiate(bullet, transform.up * 5 + transform.position, transform.rotation) as GameObject;
             shot.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
@@ -95,6 +112,13 @@ public class ShipController : MonoBehaviour
             shot.GetComponent<Rigidbody2D>().velocity = -transform.right * bulletSpeed;
         }
     }
+
+    void FixedUpdate()
+    {
+        CheckCooldowns();
+    }
+
+   
 
     private void Pulse()
     {
@@ -126,6 +150,25 @@ public class ShipController : MonoBehaviour
         else
         {
             lineController.FadeLine();
+        }
+    }
+
+    private void AntiGravity()
+    {
+        if(Time.time > nextAntiGrav)
+        {
+            nextAntiGrav = Time.time + antiGravRate;
+            gameObject.layer = 9;
+            antiGravDurationEnd = Time.time + antiGravDuration;
+        }
+       
+    }
+
+    private void CheckCooldowns()
+    {
+        if(Time.time > antiGravDurationEnd)
+        {
+            gameObject.layer = 0;
         }
     }
 }
