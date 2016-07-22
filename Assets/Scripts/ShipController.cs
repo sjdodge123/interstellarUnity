@@ -50,10 +50,12 @@ public class ShipController : MonoBehaviour
         GameVars.Ships.Add(this);
     }
 
+   
+
     // Update is called once per frame
     void Update()
     {
-        UsePlayerControls();
+        //UsePlayerControls();
         //Pulse Cannon
         if (Input.GetButtonDown("Jump") && Time.time > nextPulse)
         {
@@ -134,13 +136,26 @@ public class ShipController : MonoBehaviour
         }
     }
 
+
+
+    public void MoveHorizontal(float horizontalMovement)
+    {
+        transform.Rotate(Vector3.forward * -horizontalMovement * rotateSpeed);
+    }
+
+    public void MoveVertical(float vertical)
+    {
+        IDied();
+    }
+
+    private void IDied()
+    {
+        GameVars.GameController.SomethingDied(gameObject);
+    }
+
     private void UsePlayerControls()
     {
-        float horizontalMovement = Input.GetAxis(playerNumber + "Horizontal");
-        if (horizontalMovement != 0f)
-        {
-            transform.Rotate(Vector3.forward * -horizontalMovement * rotateSpeed);
-        }
+        
         float verticalMovement = Input.GetAxis(playerNumber + "Vertical");
         if (verticalMovement != 0f)
         {
