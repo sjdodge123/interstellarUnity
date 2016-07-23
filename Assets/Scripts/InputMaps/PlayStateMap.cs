@@ -22,15 +22,20 @@ public class PlayStateMap : MonoBehaviour {
 
         for (var i = 0; i < players.Length; i++)
         {
+            var ship = controllers[i];
+
             var horizontal = Input.GetAxis(i + "Horizontal");
             if (horizontal != 0)
             {
-                controllers[i].MoveHorizontal(horizontal);
+                ship.MoveHorizontal(horizontal);
             }
+
             var vertical = Input.GetAxis(i + "Vertical");
-            if (vertical != 0)
+            ship.MoveVertical(vertical);
+
+            if (Input.GetButtonDown(i+"Jump"))
             {
-                controllers[i].MoveVertical(vertical);
+                ship.Pulse();
             }
         }
 	}
