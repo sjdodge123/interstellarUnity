@@ -5,7 +5,6 @@ using System;
 
 public class ShipController : MonoBehaviour
 {
-
     public GameObject bullet;
     public GameObject aimTracker;
     public GameObject pathTracker;
@@ -18,6 +17,8 @@ public class ShipController : MonoBehaviour
 
     public int playerNumber;
 
+    public Vector3 spawnPosition;
+
     public float pulseRate = 1F;
     public float nextPulse = 0.0F;
     public float pulseStrength;
@@ -26,7 +27,6 @@ public class ShipController : MonoBehaviour
     private float nextAntiGrav = 0.0f;
     private float antiGravDuration = 2f;
     private float antiGravDurationEnd = 0.0f;
-
 
     private float bulletSpeed = 50f;
 
@@ -44,6 +44,8 @@ public class ShipController : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        spawnPosition = gameObject.transform.position;
+
         body = GetComponent<Rigidbody2D>();
         halo = GetComponent("Halo");
         aimController = aimTracker.GetComponent<LineController>();
@@ -52,7 +54,7 @@ public class ShipController : MonoBehaviour
 
         GameVars.Ships.Add(this);
     }
-
+    
     // Update is called once per frame
     void Update()
     {
