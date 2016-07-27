@@ -10,37 +10,68 @@ public class LineController : MonoBehaviour
     public int intSteps;
     public Color startColor;
     public Color endColor;
-    private Rigidbody2D shipBody;
+    
     private LineRenderer lineRend;
 
-    private float fadeRate = 3f;
-    private float fadeTime = 0.0f;
+    private float fadeDuration = 2f;
+    private float fadeTimer = 0.0f;
     private float fadePercent = 0f;
+
+    private float renderDuration = 3f;
+    private float renderTimer = 0.0f;
     private Color emptyStart;
     private Color emptyEnd;
 
-    // Use this for initialization
-    void Start()
+    private Rigidbody2D targetBody;
+
+    private bool collisionTrajectory;
+    private bool rendering;
+
+
+
+    public void buildObject(Rigidbody2D targetBody)
     {
-        
+        this.targetBody = targetBody;
     }
 
-    public void OnEnable()
+    void Awake()
     {
         lineRend = GetComponent<LineRenderer>();
-        shipBody = GetComponentInParent<Rigidbody2D>();
+        lineRend.SetColors(startColor, endColor);
+
         emptyStart = new Color(startColor.r, startColor.g, startColor.b, 0f);
         emptyEnd = new Color(endColor.r, endColor.g, endColor.b, 0f);
     }
 
-
-    // Update is called once per frame
-    void FixedUpdate()
+    public void FixedUpdate()
     {
-        if (shipBody.velocity.sqrMagnitude > 0)
+        fadeTimer = Time.time + fadeDuration;
+        if (rendering)
         {
-            UpdateTrajectory(shipBody.transform.position, shipBody.velocity);
+            UpdateTrajectory(targetBody.transform.position, targetBody.velocity);
+            if (Time.time > renderTimer)
+            {
+                ToggleOff();
+            }
         }
+        
+        if (!collisionTrajectory)
+        {
+            FadeLine();
+        }
+
+    }
+
+    public void ToggleOn()
+    {
+        ResetColor();
+        rendering = true;
+        renderTimer = Time.time + renderDuration;
+
+    }
+    public void ToggleOff()
+    {
+        rendering = false;
     }
 
     public void UpdateTrajectory(Vector3 initialPosition, Vector3 initialVelocity)
@@ -67,12 +98,15 @@ public class LineController : MonoBehaviour
             RaycastHit2D cast = Physics2D.Linecast(lastPosition, position);
             if (cast.collider != null && cast.rigidbody.gameObject.CompareTag("Planet"))
             {
-                ResetLine();
+                collisionTrajectory = true;
                 lineRend.SetVertexCount(i);
                 break;
             }
+            else
+            {
+                collisionTrajectory = false;
+            }
             velocity += gravContr * timeDelta;
-
         }
     }
 
@@ -89,9 +123,9 @@ public class LineController : MonoBehaviour
         return gravContr;
     }
 
-    internal void ResetLine()
-    {
-        fadeTime = Time.time + fadeRate;
+  
+    private void ResetColor()
+    { 
         if (!lineRend.enabled)
         {
             lineRend.enabled = true;
@@ -99,14 +133,15 @@ public class LineController : MonoBehaviour
         fadePercent = 0f;
         lineRend.SetColors(startColor, endColor);
     }
-
-    internal void FadeLine()
+    
+    private void FadeLine()
     {
         fadePercent += .010f;
         lineRend.SetColors(Color.Lerp(startColor, emptyStart, fadePercent), Color.Lerp(endColor, emptyEnd, fadePercent));
-        if (Time.time > fadeTime)
-        {
-            lineRend.enabled = false;
-        }
+
+        if (Time.time > fadeTimer)
+            {
+                lineRend.enabled = false;
+            }
     }
 }
