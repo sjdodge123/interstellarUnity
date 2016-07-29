@@ -17,7 +17,7 @@ public class ShipController : MonoBehaviour
 
     public int playerNumber;
 
-    public Vector3 spawnPosition;
+    
 
     public float pulseRate = 1F;
     public float nextPulse = 0.0F;
@@ -39,6 +39,7 @@ public class ShipController : MonoBehaviour
 
     private Component halo;
     private Rigidbody2D body;
+    private Vector3 spawnPosition;
 
 
     // Use this for initialization
@@ -104,6 +105,12 @@ public class ShipController : MonoBehaviour
         {
             IDied();
         }
+    }
+
+    public Vector3 SpawnPosition
+    {
+        set { spawnPosition = value; }
+        get { return spawnPosition; }
     }
 
     private void AntiGravity()

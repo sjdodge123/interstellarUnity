@@ -32,7 +32,7 @@ public class PlayState : GameState
         for (var i = 0; i < players.Length; i++)
         {
             players[i].SetActive(false);
-            players[i].transform.position = players[i].GetComponent<ShipController>().spawnPosition;
+            players[i].transform.position = players[i].GetComponent<ShipController>().SpawnPosition;
         }
     }
 }
