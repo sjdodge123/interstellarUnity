@@ -36,26 +36,15 @@ public class SpawnController : MonoBehaviour {
 
         for (var i = 0; i < quantity; i++)
         {
-            float xLeftBound  = spawnX + i * spawnWidth / quantity;
-            float xRightBount = xLeftBound + (i+1) * spawnWidth / quantity;
+            float spawnCushion = spawnWidth / (quantity * 2);
+            var spawnLocation = generateSpawnLoc(i);
 
-            float yUpBound  = spawnY - i * spawnHeight / quantity;
-            float yBotBound = yUpBound - (i + 1) * spawnHeight / quantity;
-
-            var spawnLocation = new Vector3(Random.Range(xLeftBound, xRightBount), Random.Range(yBotBound, yUpBound), 0);
-            
             for (var j = 0; j < players.Length; j++)
             {
                 Vector3 distance = players[j].transform.position - spawnLocation;
-                while (distance.magnitude < spawnWidth/(quantity*2))
+                while (distance.magnitude < spawnCushion)
                 {
-                    xLeftBound = spawnX + i * spawnWidth / quantity;
-                    xRightBount = xLeftBound + (i + 1) * spawnWidth / quantity;
-
-                    yUpBound = spawnY - i * spawnHeight / quantity;
-                    yBotBound = yUpBound - (i + 1) * spawnHeight / quantity;
-
-                    spawnLocation = new Vector3(Random.Range(xLeftBound, xRightBount), Random.Range(yUpBound, yBotBound), 0);
+                    spawnLocation = generateSpawnLoc(i);
                     distance = players[j].transform.position - spawnLocation;
                 } 
             }
@@ -81,5 +70,17 @@ public class SpawnController : MonoBehaviour {
 
             spawned.GetComponent<Rigidbody2D>().velocity = unitVector * velocity;
         }
+    }
+    private Vector3 generateSpawnLoc(int objInt)
+    {
+        float xLeftBound = spawnX + objInt * spawnWidth / quantity;
+        float xRightBount = xLeftBound + (objInt + 1) * spawnWidth / quantity;
+
+        float yUpBound = spawnY - objInt * spawnHeight / quantity;
+        float yBotBound = yUpBound - (objInt + 1) * spawnHeight / quantity;
+
+        var spawnLocation = new Vector3(Random.Range(xLeftBound, xRightBount), Random.Range(yBotBound, yUpBound), 0);
+
+        return spawnLocation;
     }
 }
