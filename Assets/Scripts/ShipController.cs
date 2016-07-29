@@ -6,8 +6,8 @@ using System;
 public class ShipController : MonoBehaviour
 {
     public GameObject bullet;
-    public GameObject aimTracker;
-    public GameObject pathTracker;
+    //public GameObject portAimTracker;
+    //public GameObject starAimTracker;
 
     public float speed;
     public float rotateSpeed;
@@ -35,7 +35,8 @@ public class ShipController : MonoBehaviour
     private bool haloBool = false;
 
     private LineController lineController;
-    private LineController aimController;
+    //private LineController portAimController;
+    //private LineController starAimController;
 
     private Component halo;
     private Rigidbody2D body;
@@ -49,11 +50,24 @@ public class ShipController : MonoBehaviour
 
         body = GetComponent<Rigidbody2D>();
         halo = GetComponent("Halo");
-        aimController = aimTracker.GetComponent<LineController>();
-        aimTracker.SetActive(false);
-        lineController = pathTracker.GetComponent<LineController>();
+
+        //port aim tracking
+        //portAimController = portAimTracker.GetComponent<LineController>();
+        //portAimTracker.SetActive(false);
+
+        //starboard aim tracking
+        //starAimController = starAimTracker.GetComponent<LineController>();
+        //starAimTracker.SetActive(false);
+
+        lineController = gameObject.GetComponentInChildren<LineController>();
+        lineController.buildObject(body);
 
         GameVars.Ships.Add(this);
+    }
+
+    void Start()
+    {
+
     }
     
     // Update is called once per frame
@@ -88,15 +102,8 @@ public class ShipController : MonoBehaviour
 
     public void MoveVertical(float vertical)
     {
-        if (vertical != 0f)
-        {
-            lineController.ResetLine();
-            body.AddForce(transform.up * speed * vertical);
-        }
-        else
-        {
-            lineController.FadeLine();
-        }
+        lineController.ToggleOn();
+        body.AddForce(transform.up * speed * vertical);
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -170,12 +177,13 @@ public class ShipController : MonoBehaviour
         }
         else if (fire1Held)
         {
-            aimTracker.SetActive(true);
-            aimController.UpdateTrajectory(transform.right * 3 + transform.position, transform.right * bulletSpeed);
+            //starAimTracker.SetActive(true);
+            //starAimController.UpdateTrajectory(transform.right * 3 + transform.position, transform.right * bulletSpeed);
         }
         else if (fire2Held)
         {
-            //Debug.Log("Draw2");
+            //portAimTracker.SetActive(true);
+            //portAimController.UpdateTrajectory(-transform.right * 3 + transform.position, -transform.right * bulletSpeed);
         }
 
         if (fire4LetGo || (fire1LetGo && fire2LetGo))
@@ -185,12 +193,13 @@ public class ShipController : MonoBehaviour
         }
         else if (fire1LetGo)
         {
-            aimTracker.SetActive(false);
+            //starAimTracker.SetActive(false);
             var shot = Instantiate(bullet, transform.right * 3 + transform.position, transform.rotation * Quaternion.Euler(0, 0, -90f)) as GameObject;
             shot.GetComponent<Rigidbody2D>().velocity = transform.right * bulletSpeed;
         }
         else if (fire2LetGo)
         {
+            //portAimTracker.SetActive(false);
             var shot = Instantiate(bullet, -transform.right * 3 + transform.position, transform.rotation * Quaternion.Euler(0, 0, 90f)) as GameObject;
             shot.GetComponent<Rigidbody2D>().velocity = -transform.right * bulletSpeed;
         }

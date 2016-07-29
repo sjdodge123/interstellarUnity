@@ -29,9 +29,11 @@ public class PlayStateMap : MonoBehaviour {
             {
                 ship.MoveHorizontal(horizontal);
             }
-
             var vertical = Input.GetAxis(i + "Vertical");
-            ship.MoveVertical(vertical);
+            if (vertical != 0)
+            {
+                ship.MoveVertical(vertical);
+            }
 
             if (Input.GetButtonDown(i+"Jump"))
             {
