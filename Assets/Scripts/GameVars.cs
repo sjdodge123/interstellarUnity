@@ -8,6 +8,7 @@ public class GameVars : MonoBehaviour {
     public static List<ShipController> Ships = new List<ShipController>();
     public static List<PlanetController> Planets = new List<PlanetController>();
 
+    public static CameraController Camera;
     public static GameFactory GameFactory;
     public static GameController GameController;
 

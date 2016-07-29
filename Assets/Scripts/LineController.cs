@@ -49,7 +49,7 @@ public class LineController : MonoBehaviour
         if (rendering)
         {
             UpdateTrajectory(targetBody.transform.position, targetBody.velocity);
-            if (Time.time > renderTimer)
+            if (Time.time > renderTimer && !collisionTrajectory)
             {
                 ToggleOff();
             }

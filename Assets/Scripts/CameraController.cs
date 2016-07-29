@@ -21,20 +21,25 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         m_Camera = GetComponentInChildren<Camera>();
+        GameVars.Camera = this;
     }
 
     void Start()
     {
         
-        for (var i = 0; i < GameVars.Planets.Count; i++)
-        {
-            m_Targets.Add(GameVars.Planets[i].gameObject);
-        }
-        
+        //for (var i = 0; i < GameVars.Planets.Count; i++)
+        //{
+        //    m_Targets.Add(GameVars.Planets[i].gameObject);
+        //}
         for (var j = 0; j < GameVars.Ships.Count; j++)
         {
             m_Targets.Add(GameVars.Ships[j].gameObject);
         }
+    }
+
+    public void AddToCamera(GameObject ship)
+    {
+        m_Targets.Add(ship);
     }
 
     private void FixedUpdate()

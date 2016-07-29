@@ -13,11 +13,11 @@ public class ShipController : MonoBehaviour
     public float rotateSpeed;
     public float pulseRadius;
 
-    
+
 
     public int playerNumber;
 
-    
+
 
     public float pulseRate = 1F;
     public float nextPulse = 0.0F;
@@ -61,15 +61,13 @@ public class ShipController : MonoBehaviour
 
         lineController = gameObject.GetComponentInChildren<LineController>();
         lineController.buildObject(body);
-
-        GameVars.Ships.Add(this);
     }
 
-    void Start()
+    public void OnEnable()
     {
-
+        GameVars.Camera.AddToCamera(gameObject);
     }
-    
+
     // Update is called once per frame
     void Update()
     {
