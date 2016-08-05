@@ -16,8 +16,6 @@ public class CameraController : MonoBehaviour
 
     private Camera m_Camera;
 
-    // Use this for initialization
-
     private void Awake()
     {
         m_Camera = GetComponentInChildren<Camera>();
@@ -74,7 +72,6 @@ public class CameraController : MonoBehaviour
         if (numTargets > 0)
             averagePos /= numTargets;
     
-        averagePos.y = transform.position.y;
         m_DesiredPosition = averagePos;
     }
 
