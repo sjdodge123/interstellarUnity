@@ -74,6 +74,12 @@ public class LineController : MonoBehaviour
         rendering = false;
     }
 
+    public void HideLine()
+    {
+        lineRend.enabled = false;
+        ToggleOff();
+    }
+
     public void UpdateTrajectory(Vector3 initialPosition, Vector3 initialVelocity)
     {
         float timeDelta = Time.fixedDeltaTime;

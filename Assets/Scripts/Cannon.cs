@@ -11,7 +11,8 @@ public class Cannon : Weapon
     private Rigidbody2D munitionBody;
     private float rotationAngle;
     private int portOrStar = 1;
-    
+    private Rigidbody2D parentBody;
+
     public override void Build(float rotationAngle)
     {
         this.rotationAngle = rotationAngle;
@@ -25,22 +26,46 @@ public class Cannon : Weapon
     public void Awake()
     {
         lineController = gameObject.GetComponentInChildren<LineController>();
-        munitionBody = munition.GetComponent<Rigidbody2D>();
-        lineController.buildObject(munitionBody);
+    }
+
+    public void Start()
+    {
+        parentBody = this.transform.parent.GetComponent<Rigidbody2D>();
     }
 
     public override void Aim()
     {
+        if (munitionBody == null)
+        {
+            munitionBody = gameObject.AddComponent<Rigidbody2D>();
+        }
+
+        munitionBody.velocity = FindMunitionVelocity();
+        munitionBody.position = FindMunitionPosition();
+
+        lineController.buildObject(munitionBody);
         lineController.ToggleOn();
     }
 
     public override void Fire()
     {
-        lineController.ToggleOff();
-        var shot = Instantiate(munition, portOrStar * this.transform.parent.right * 3 + this.transform.parent.position, this.transform.parent.rotation * Quaternion.Euler(0, 0, rotationAngle)) as GameObject;
-        var shotBody = shot.GetComponent<Rigidbody2D>();
-        shotBody.velocity = portOrStar * this.transform.parent.right * fireVelocity;
-        shotBody.velocity += this.transform.parent.GetComponent<Rigidbody2D>().velocity;
+        Destroy(munitionBody);
+        munitionBody = null;
+        lineController.HideLine();
+        var shot = Instantiate(munition, FindMunitionPosition(), this.transform.parent.rotation * Quaternion.Euler(0, 0, rotationAngle)) as GameObject;
+        shot.GetComponent<Rigidbody2D>().velocity = FindMunitionVelocity();
+    }
 
+    private Vector2 FindMunitionVelocity()
+    {
+        Vector2 velocity;
+        velocity = portOrStar * this.transform.parent.right * fireVelocity;
+        velocity += parentBody.velocity;
+        return velocity;
+    }
+
+    private Vector2 FindMunitionPosition()
+    {
+        return portOrStar * this.transform.parent.right * 3 + this.transform.parent.position;
     }
 }
