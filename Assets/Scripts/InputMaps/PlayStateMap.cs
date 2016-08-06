@@ -25,11 +25,26 @@ public class PlayStateMap : MonoBehaviour {
             var ship = controllers[i];
 
             var horizontal = Input.GetAxis(i + "Horizontal");
+            var controllerLeftHorizontal = Input.GetAxis("LeftJoystickHorzional");
+
+            if (controllerLeftHorizontal != 0)
+            {
+                var controllerLeftVertical = Input.GetAxis("LeftJoystickVertical");
+                horizontal = controllerLeftHorizontal;
+            }
+            
             if (horizontal != 0)
             {
                 ship.MoveHorizontal(horizontal);
             }
+
+            //Thrust control
             var vertical = Input.GetAxis(i + "Vertical");
+            if (Input.GetButton("AButton"))
+            {
+                vertical = Input.GetAxis("AButton");
+            }
+
             if (vertical != 0)
             {
                 ship.MoveVertical(vertical);
@@ -40,21 +55,20 @@ public class PlayStateMap : MonoBehaviour {
                 ship.Pulse();
             }
 
-            if(Input.GetButton(i + "Fire1"))
+            if (Input.GetButton(i + "Fire1") || Input.GetButton("RightBumper"))
             {
                 ship.AimStarboard();
             }
-            if (Input.GetButton(i + "Fire2"))
-            {
-                ship.AimPort();
-            }
-
-            if(Input.GetButtonUp(i + "Fire1"))
+            if (Input.GetButtonUp(i + "Fire1")|| Input.GetButtonUp("RightBumper"))
             {
                 ship.FireStarboard();
             }
 
-            if (Input.GetButtonUp(i + "Fire2"))
+            if (Input.GetButton(i + "Fire2") || Input.GetButton("LeftBumper"))
+            {
+                ship.AimPort();
+            }
+            if (Input.GetButtonUp(i + "Fire2") || Input.GetButtonUp("LeftBumper"))
             {
                 ship.FirePort();
             }
