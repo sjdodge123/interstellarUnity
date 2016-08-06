@@ -4,7 +4,11 @@ using System;
 
 public abstract class Weapon : MonoBehaviour {
 
-    public virtual void Build(Transform transform, float rotationAngle)
+    public virtual void Build()
+    {
+        throw new NotImplementedException();
+    }
+    public virtual void Build(float rotationAngle)
     {
         throw new NotImplementedException();
     }

@@ -45,6 +45,4 @@ public class GameFactory : MonoBehaviour {
     {
         return new GameEndState(centerText);
     }
-
-
 }

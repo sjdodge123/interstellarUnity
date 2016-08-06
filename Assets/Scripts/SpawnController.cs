@@ -48,7 +48,7 @@ public class SpawnController : MonoBehaviour {
                     distance = players[j].transform.position - spawnLocation;
                 } 
             }
-            var spawned = Instantiate(spawnObject, spawnLocation, Quaternion.identity) as GameObject;
+            Instantiate(spawnObject, spawnLocation, Quaternion.identity);
         }
     }
     private void spawnOther()

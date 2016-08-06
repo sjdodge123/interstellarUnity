@@ -42,21 +42,21 @@ public class PlayStateMap : MonoBehaviour {
 
             if(Input.GetButton(i + "Fire1"))
             {
-                ship.AimPort();
+                ship.AimStarboard();
             }
             if (Input.GetButton(i + "Fire2"))
             {
-                ship.AimStarBoard();
+                ship.AimPort();
             }
 
             if(Input.GetButtonUp(i + "Fire1"))
             {
-                ship.FirePort();
+                ship.FireStarboard();
             }
 
             if (Input.GetButtonUp(i + "Fire2"))
             {
-                ship.FireStarBoard();
+                ship.FirePort();
             }
         }
 	}

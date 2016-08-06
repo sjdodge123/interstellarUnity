@@ -5,9 +5,12 @@ using System;
 
 public class ShipController : MonoBehaviour
 {
+    public GameObject weapon1;
+    public GameObject weapon2;
 
-    public Weapon portWeapon;
-    public Weapon starWeapon;
+
+    private Weapon portWeaponController;
+    private Weapon starWeaponController;
 
     public float speed;
     public float rotateSpeed;
@@ -50,8 +53,17 @@ public class ShipController : MonoBehaviour
 
         lineController = gameObject.GetComponentInChildren<LineController>();
         lineController.buildObject(body);
-        portWeapon.Build(transform,-90);
-        starWeapon.Build(transform, 90);
+
+        weapon1 = Instantiate(weapon1);
+        weapon1.transform.parent = transform;
+        portWeaponController = weapon1.GetComponent<Weapon>();
+
+        weapon2 = Instantiate(weapon2);
+        weapon2.transform.parent = transform;
+        starWeaponController = weapon2.GetComponent<Weapon>();
+
+        portWeaponController.Build(90);
+        starWeaponController.Build(-90);
     }
 
     public void OnEnable()
@@ -89,21 +101,21 @@ public class ShipController : MonoBehaviour
         body.AddForce(transform.up * speed * vertical);
     }
 
-    public void AimStarBoard()
+    public void AimStarboard()
     {
-        starWeapon.Aim();
+        starWeaponController.Aim();
     }
     public void AimPort()
     {
-        portWeapon.Aim();
+        portWeaponController.Aim();
     }
-    public void FireStarBoard()
+    public void FireStarboard()
     {
-        starWeapon.Fire();
+        starWeaponController.Fire();
     }
     public void FirePort()
     {
-        portWeapon.Fire();
+        portWeaponController.Fire();
     }
 
 
