@@ -39,6 +39,25 @@ public class PlayStateMap : MonoBehaviour {
             {
                 ship.Pulse();
             }
+
+            if(Input.GetButton(i + "Fire1"))
+            {
+                ship.AimPort();
+            }
+            if (Input.GetButton(i + "Fire2"))
+            {
+                ship.AimStarBoard();
+            }
+
+            if(Input.GetButtonUp(i + "Fire1"))
+            {
+                ship.FirePort();
+            }
+
+            if (Input.GetButtonUp(i + "Fire2"))
+            {
+                ship.FireStarBoard();
+            }
         }
 	}
 }

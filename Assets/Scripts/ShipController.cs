@@ -5,15 +5,15 @@ using System;
 
 public class ShipController : MonoBehaviour
 {
-    public GameObject bullet;
-    //public GameObject portAimTracker;
-    //public GameObject starAimTracker;
+
+    public Weapon portWeapon;
+    public Weapon starWeapon;
 
     public float speed;
     public float rotateSpeed;
     public float pulseRadius;
 
-
+    
 
     public int playerNumber;
 
@@ -28,19 +28,16 @@ public class ShipController : MonoBehaviour
     private float antiGravDuration = 2f;
     private float antiGravDurationEnd = 0.0f;
 
-    private float bulletSpeed = 50f;
-
     public float haloTimer;
     private float haloTimeStamp;
     private bool haloBool = false;
 
     private LineController lineController;
-    //private LineController portAimController;
-    //private LineController starAimController;
 
     private Component halo;
     private Rigidbody2D body;
     private Vector3 spawnPosition;
+    
 
 
     // Use this for initialization
@@ -51,27 +48,15 @@ public class ShipController : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         halo = GetComponent("Halo");
 
-        //port aim tracking
-        //portAimController = portAimTracker.GetComponent<LineController>();
-        //portAimTracker.SetActive(false);
-
-        //starboard aim tracking
-        //starAimController = starAimTracker.GetComponent<LineController>();
-        //starAimTracker.SetActive(false);
-
         lineController = gameObject.GetComponentInChildren<LineController>();
         lineController.buildObject(body);
+        portWeapon.Build(transform,-90);
+        starWeapon.Build(transform, 90);
     }
 
     public void OnEnable()
     {
         GameVars.Camera.AddToCamera(gameObject);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        CheckWeapons();
     }
 
     void FixedUpdate()
@@ -103,6 +88,24 @@ public class ShipController : MonoBehaviour
         lineController.ToggleOn();
         body.AddForce(transform.up * speed * vertical);
     }
+
+    public void AimStarBoard()
+    {
+        starWeapon.Aim();
+    }
+    public void AimPort()
+    {
+        portWeapon.Aim();
+    }
+    public void FireStarBoard()
+    {
+        starWeapon.Fire();
+    }
+    public void FirePort()
+    {
+        portWeapon.Fire();
+    }
+
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
@@ -146,60 +149,5 @@ public class ShipController : MonoBehaviour
     private void IDied()
     {
         GameVars.GameController.SomethingDied(gameObject);
-    }
-
-    //TODO DELETE THIS and shift logic to playstatemap
-    private void CheckWeapons()
-    {
-        bool fire1Held = Input.GetButton(playerNumber + "Fire1");
-        bool fire2Held = Input.GetButton(playerNumber + "Fire2");
-        bool fire3Held = Input.GetButton(playerNumber + "Fire3");
-        bool fire4Held = Input.GetButton(playerNumber + "Fire1") && Input.GetButton(playerNumber + "Fire2");
-
-
-
-        bool fire1LetGo = !fire1Held && Input.GetButtonUp(playerNumber + "Fire1");
-        bool fire2LetGo = !fire2Held && Input.GetButtonUp(playerNumber + "Fire2");
-        bool fire3LetGo = !fire3Held && Input.GetButtonUp(playerNumber + "Fire3");
-        bool fire4LetGo = !fire1Held && !fire2Held && (Input.GetButtonUp(playerNumber + "Fire1") && Input.GetButtonUp(playerNumber + "Fire2"));
-
-        if (fire3LetGo)
-        {
-            AntiGravity();
-        }
-
-
-        if (fire4Held)
-        {
-            //Debug.Log("Draw3");
-        }
-        else if (fire1Held)
-        {
-            //starAimTracker.SetActive(true);
-            //starAimController.UpdateTrajectory(transform.right * 3 + transform.position, transform.right * bulletSpeed);
-        }
-        else if (fire2Held)
-        {
-            //portAimTracker.SetActive(true);
-            //portAimController.UpdateTrajectory(-transform.right * 3 + transform.position, -transform.right * bulletSpeed);
-        }
-
-        if (fire4LetGo || (fire1LetGo && fire2LetGo))
-        {
-            var shot = Instantiate(bullet, transform.up * 5 + transform.position, transform.rotation) as GameObject;
-            shot.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
-        }
-        else if (fire1LetGo)
-        {
-            //starAimTracker.SetActive(false);
-            var shot = Instantiate(bullet, transform.right * 3 + transform.position, transform.rotation * Quaternion.Euler(0, 0, -90f)) as GameObject;
-            shot.GetComponent<Rigidbody2D>().velocity = transform.right * bulletSpeed;
-        }
-        else if (fire2LetGo)
-        {
-            //portAimTracker.SetActive(false);
-            var shot = Instantiate(bullet, -transform.right * 3 + transform.position, transform.rotation * Quaternion.Euler(0, 0, 90f)) as GameObject;
-            shot.GetComponent<Rigidbody2D>().velocity = -transform.right * bulletSpeed;
-        }
     }
 }
