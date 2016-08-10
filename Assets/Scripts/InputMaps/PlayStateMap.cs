@@ -6,6 +6,7 @@ public class PlayStateMap : MonoBehaviour {
 
     private GameObject[] players;
     private List<ShipController> controllers;
+    
     // Use this for initialization
     void Start()
     {
@@ -24,15 +25,18 @@ public class PlayStateMap : MonoBehaviour {
         {
             var ship = controllers[i];
 
-            var horizontal = Input.GetAxis(i + "Horizontal");
-            var controllerLeftHorizontal = Input.GetAxis("LeftJoystickHorzional");
-
-            if (controllerLeftHorizontal != 0)
+            //Controller-based rotation
+            var thisHorAxis = Input.GetAxis(i + "LeftJoystickHorzional");
+            var thisVertAxis = Input.GetAxis(i + "LeftJoystickVertical");
+            
+            if (thisHorAxis != 0 || thisVertAxis != 0)
             {
-                var controllerLeftVertical = Input.GetAxis("LeftJoystickVertical");
-                horizontal = controllerLeftHorizontal;
+                ship.RotateToAngle(thisHorAxis, thisVertAxis);
             }
             
+            //Keyboard-based rotation
+            var horizontal = Input.GetAxis(i + "Horizontal");
+
             if (horizontal != 0)
             {
                 ship.MoveHorizontal(horizontal);
@@ -40,9 +44,9 @@ public class PlayStateMap : MonoBehaviour {
 
             //Thrust control
             var vertical = Input.GetAxis(i + "Vertical");
-            if (Input.GetButton("AButton"))
+            if (Input.GetButton(i + "AButton"))
             {
-                vertical = Input.GetAxis("AButton");
+                vertical = Input.GetAxis(i + "AButton");
             }
 
             if (vertical != 0)
@@ -55,20 +59,20 @@ public class PlayStateMap : MonoBehaviour {
                 ship.Pulse();
             }
 
-            if (Input.GetButton(i + "Fire1") || Input.GetButton("RightBumper"))
+            if (Input.GetButton(i + "Fire1") || Input.GetButton(i + "RightBumper"))
             {
                 ship.AimStarboard();
             }
-            if (Input.GetButtonUp(i + "Fire1")|| Input.GetButtonUp("RightBumper"))
+            if (Input.GetButtonUp(i + "Fire1")|| Input.GetButtonUp(i + "RightBumper"))
             {
                 ship.FireStarboard();
             }
 
-            if (Input.GetButton(i + "Fire2") || Input.GetButton("LeftBumper"))
+            if (Input.GetButton(i + "Fire2") || Input.GetButton(i + "LeftBumper"))
             {
                 ship.AimPort();
             }
-            if (Input.GetButtonUp(i + "Fire2") || Input.GetButtonUp("LeftBumper"))
+            if (Input.GetButtonUp(i + "Fire2") || Input.GetButtonUp(i + "LeftBumper"))
             {
                 ship.FirePort();
             }

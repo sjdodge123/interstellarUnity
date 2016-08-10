@@ -66,6 +66,8 @@ public class ShipController : MonoBehaviour
         starWeaponController.Build(-90);
     }
 
+  
+
     public void OnEnable()
     {
         GameVars.Camera.AddToCamera(gameObject);
@@ -99,6 +101,19 @@ public class ShipController : MonoBehaviour
     {
         lineController.ToggleOn();
         body.AddForce(transform.up * speed * vertical);
+    }
+
+    public void RotateToAngle(float thisHorAxis, float thisVertAxis)
+    {
+        var angleDest = Mathf.Repeat(Mathf.Atan2(-thisHorAxis, -thisVertAxis) * Mathf.Rad2Deg, 360f);
+        var angleStart = transform.eulerAngles.z;
+        var angleDiff = Math.Abs(Mathf.DeltaAngle(angleStart, angleDest));
+        if ( angleDiff > 0.5f)
+        {
+            var lerpTime =  Time.deltaTime * rotateSpeed ;
+            var lerpAngle = Mathf.LerpAngle(angleStart, angleDest, lerpTime);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, lerpAngle);
+        }
     }
 
     public void AimStarboard()
