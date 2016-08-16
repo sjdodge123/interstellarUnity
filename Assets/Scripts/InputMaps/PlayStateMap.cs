@@ -26,12 +26,13 @@ public class PlayStateMap : MonoBehaviour {
             var ship = controllers[i];
 
             //Controller-based rotation
-            var thisHorAxis = Input.GetAxis(i + "LeftJoystickHorzional");
+            var thisHorAxis = Input.GetAxis(i + "LeftJoystickHorizontal");
             var thisVertAxis = Input.GetAxis(i + "LeftJoystickVertical");
             
             if (thisHorAxis != 0 || thisVertAxis != 0)
             {
                 ship.RotateToAngle(thisHorAxis, thisVertAxis);
+                
             }
             
             //Keyboard-based rotation
@@ -48,7 +49,6 @@ public class PlayStateMap : MonoBehaviour {
             {
                 vertical = Input.GetAxis(i + "AButton");
             }
-
             if (vertical != 0)
             {
                 ship.MoveVertical(vertical);
@@ -58,7 +58,7 @@ public class PlayStateMap : MonoBehaviour {
             {
                 ship.Pulse();
             }
-
+           
             if (Input.GetButton(i + "Fire1") || Input.GetButton(i + "RightBumper"))
             {
                 ship.AimStarboard();

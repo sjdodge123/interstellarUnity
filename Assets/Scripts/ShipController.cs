@@ -11,6 +11,7 @@ public class ShipController : MonoBehaviour
 
     private Weapon portWeaponController;
     private Weapon starWeaponController;
+    private FuelController fuelController;
 
     public float speed;
     public float rotateSpeed;
@@ -20,6 +21,7 @@ public class ShipController : MonoBehaviour
 
     public int playerNumber;
 
+    
 
 
     public float pulseRate = 1F;
@@ -53,7 +55,7 @@ public class ShipController : MonoBehaviour
 
         lineController = gameObject.GetComponentInChildren<LineController>();
         lineController.buildObject(body);
-
+        
         weapon1 = Instantiate(weapon1);
         weapon1.transform.parent = transform;
         portWeaponController = weapon1.GetComponent<Weapon>();
@@ -64,6 +66,8 @@ public class ShipController : MonoBehaviour
 
         portWeaponController.Build(90);
         starWeaponController.Build(-90);
+
+        fuelController = gameObject.GetComponent<FuelController>();
     }
 
   
@@ -100,7 +104,12 @@ public class ShipController : MonoBehaviour
     public void MoveVertical(float vertical)
     {
         lineController.ToggleOn();
-        body.AddForce(transform.up * speed * vertical);
+        fuelController.BurnFuel(vertical);
+        if (fuelController.currentFuel > 0)
+        {
+            body.AddForce(transform.up * speed * vertical);
+        }
+       
     }
 
     public void RotateToAngle(float thisHorAxis, float thisVertAxis)
