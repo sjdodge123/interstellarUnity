@@ -8,8 +8,7 @@ public class LineController : MonoBehaviour
 
 
     public int intSteps;
-    public Color startColor;
-    public Color endColor;
+    
     
     private LineRenderer lineRend;
 
@@ -26,7 +25,8 @@ public class LineController : MonoBehaviour
 
     private bool collisionTrajectory;
     private bool rendering;
-
+    private Color startColor;
+    private Color endColor;
 
 
     public void buildObject(Rigidbody2D targetBody)
@@ -36,11 +36,7 @@ public class LineController : MonoBehaviour
 
     void Awake()
     {
-        lineRend = GetComponent<LineRenderer>();
-        lineRend.SetColors(startColor, endColor);
-
-        emptyStart = new Color(startColor.r, startColor.g, startColor.b, 0f);
-        emptyEnd = new Color(endColor.r, endColor.g, endColor.b, 0f);
+        lineRend = GetComponent<LineRenderer>();   
     }
 
     public void FixedUpdate()
@@ -149,5 +145,22 @@ public class LineController : MonoBehaviour
             {
                 lineRend.enabled = false;
             }
+    }
+
+    public void setStartColor(Color newStart)
+    {
+        startColor = newStart;
+        lineRend.SetColors(startColor, endColor);
+
+        emptyStart = new Color(startColor.r, startColor.g, startColor.b, 0f);
+        emptyEnd = new Color(endColor.r, endColor.g, endColor.b, 0f);
+    }
+    public void setEndColor(Color newEnd)
+    {
+        endColor = newEnd;
+        lineRend.SetColors(startColor, endColor);
+
+        emptyStart = new Color(startColor.r, startColor.g, startColor.b, 0f);
+        emptyEnd = new Color(endColor.r, endColor.g, endColor.b, 0f);
     }
 }

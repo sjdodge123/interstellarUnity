@@ -8,6 +8,8 @@ public class ShipController : MonoBehaviour
     public GameObject weapon1;
     public GameObject weapon2;
 
+    public Color playerColor;
+
 
     private Weapon portWeaponController;
     private Weapon starWeaponController;
@@ -55,7 +57,7 @@ public class ShipController : MonoBehaviour
 
         lineController = gameObject.GetComponentInChildren<LineController>();
         lineController.buildObject(body);
-        
+
         weapon1 = Instantiate(weapon1);
         weapon1.transform.parent = transform;
         portWeaponController = weapon1.GetComponent<Weapon>();
@@ -68,9 +70,16 @@ public class ShipController : MonoBehaviour
         starWeaponController.Build(-90);
 
         fuelController = gameObject.GetComponent<FuelController>();
+        fuelController.setColor(playerColor);
+    }
+    public void Start()
+    {
+        lineController.setStartColor(playerColor);
+        lineController.setEndColor(playerColor);
+
     }
 
-  
+
 
     public void OnEnable()
     {

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class FuelController : MonoBehaviour {
 
@@ -10,10 +11,26 @@ public class FuelController : MonoBehaviour {
 
     public float burnRate;
     public float chargeRate;
+    private Image fill;
+    private Image background;
+    private Image[] images;
 
     void Awake()
     {
         currentFuel = totalFuel;
+        //fill = fuelSlider.GetComponentInChildren<Image>();
+        images = fuelSlider.GetComponentsInChildren<Image>();
+        foreach ( Image i in images)
+        {
+            if (i.name == "Background")
+            {
+                background = i;
+            }
+            else if (i.name == "Fill")
+            {
+                fill = i;
+            }
+        }
     }
     // Use this for initialization
     void Start ()
@@ -55,5 +72,12 @@ public class FuelController : MonoBehaviour {
     private void UpdateSlider()
     {
         fuelSlider.value = currentFuel;
+    }
+
+    internal void setColor(Color playerColor)
+    {
+        fill.color = playerColor;
+        playerColor = new Color(playerColor.r, playerColor.g, playerColor.b, 0.5f);
+        background.color = playerColor;
     }
 }
