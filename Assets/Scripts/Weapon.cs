@@ -8,7 +8,7 @@ public abstract class Weapon : MonoBehaviour {
     {
         throw new NotImplementedException();
     }
-    public virtual void Build(float rotationAngle)
+    public virtual void Build(float rotationAngle, Color trackingColor)
     {
         throw new NotImplementedException();
     }

@@ -12,14 +12,17 @@ public class Cannon : Weapon
     private float rotationAngle;
     private int portOrStar = 1;
     private Rigidbody2D parentBody;
+    private Color trackingColor;
 
-    public override void Build(float rotationAngle)
+    public override void Build(float rotationAngle, Color trackingColor)
     {
         this.rotationAngle = rotationAngle;
         if (this.rotationAngle > 0)
         {
             portOrStar = -portOrStar;
         }
+
+        this.trackingColor = trackingColor;
     }
 
 
@@ -31,6 +34,7 @@ public class Cannon : Weapon
     public void Start()
     {
         parentBody = this.transform.parent.GetComponent<Rigidbody2D>();
+        SetTrackingColor(trackingColor, trackingColor);
     }
 
     public override void Aim()
@@ -67,5 +71,10 @@ public class Cannon : Weapon
     private Vector2 FindMunitionPosition()
     {
         return portOrStar * this.transform.parent.right * 3 + this.transform.parent.position;
+    }
+    public void SetTrackingColor(Color startColor, Color endColor)
+    {
+        lineController.setStartColor(startColor);
+        lineController.setEndColor(endColor);
     }
 }
