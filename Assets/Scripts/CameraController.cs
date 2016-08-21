@@ -35,12 +35,22 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public void AddToCamera(GameObject ship)
+    public void AddToCamera(GameObject target)
     {
-        m_Targets.Add(ship);
+        if (!m_Targets.Contains(target))
+        {
+            m_Targets.Add(target);
+        }
+    }
+    public void RemoveFromCamera(GameObject target)
+    {
+        if (m_Targets.Contains(target))
+        {
+            m_Targets.Remove(target);
+        }
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         Move();
         Zoom();
