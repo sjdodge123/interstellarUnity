@@ -84,6 +84,7 @@ public class ShipController : MonoBehaviour
     public void OnEnable()
     {
         GameVars.Camera.AddToCamera(gameObject);
+        fuelController.resetFuel();
     }
 
     void FixedUpdate()

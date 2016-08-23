@@ -5,6 +5,7 @@ using System;
 public class Cannon : Weapon
 {
     public GameObject munition;
+    public float recoverTime = 4f;
     public float fireVelocity;
 
     private LineController lineController;
@@ -13,6 +14,8 @@ public class Cannon : Weapon
     private int portOrStar = 1;
     private Rigidbody2D parentBody;
     private Color trackingColor;
+    
+    private float cooldownTimer = 0.0f;
 
     public override void Build(float rotationAngle, Color trackingColor)
     {
@@ -43,21 +46,24 @@ public class Cannon : Weapon
         {
             munitionBody = gameObject.AddComponent<Rigidbody2D>();
         }
-
         munitionBody.velocity = FindMunitionVelocity();
         munitionBody.position = FindMunitionPosition();
-
         lineController.buildObject(munitionBody);
         lineController.ToggleOn();
     }
 
     public override void Fire()
     {
+        //Hide Active Aimline
         Destroy(munitionBody);
         munitionBody = null;
         lineController.HideLine();
-        var shot = Instantiate(munition, FindMunitionPosition(), this.transform.parent.rotation * Quaternion.Euler(0, 0, rotationAngle)) as GameObject;
-        shot.GetComponent<Rigidbody2D>().velocity = FindMunitionVelocity();
+        if(Time.time > cooldownTimer)
+        {
+            cooldownTimer = Time.time + recoverTime;
+            var shot = Instantiate(munition, FindMunitionPosition(), this.transform.parent.rotation * Quaternion.Euler(0, 0, rotationAngle)) as GameObject;
+            shot.GetComponent<Rigidbody2D>().velocity = FindMunitionVelocity();
+        }
     }
 
     private Vector2 FindMunitionVelocity()

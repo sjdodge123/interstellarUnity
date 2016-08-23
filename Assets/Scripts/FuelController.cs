@@ -80,4 +80,8 @@ public class FuelController : MonoBehaviour {
         playerColor = new Color(playerColor.r, playerColor.g, playerColor.b, 0.5f);
         background.color = playerColor;
     }
+    public void resetFuel()
+    {
+        currentFuel = totalFuel;
+    }
 }
