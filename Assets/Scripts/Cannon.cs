@@ -44,10 +44,11 @@ public class Cannon : Weapon
     {
         if (munitionBody == null)
         {
-            munitionBody = gameObject.AddComponent<Rigidbody2D>();
+            munitionBody = gameObject.AddComponent<Rigidbody2D>(); //empty rigid body. Doesn't have bullet properties
         }
         munitionBody.velocity = FindMunitionVelocity();
         munitionBody.position = FindMunitionPosition();
+        munitionBody.tag = munition.tag;
         lineController.buildObject(munitionBody);
         lineController.ToggleOn();
     }

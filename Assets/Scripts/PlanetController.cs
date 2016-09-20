@@ -38,7 +38,13 @@ public class PlanetController : MonoBehaviour
                 Vector3 distance = otherBody.transform.position - transform.position;
                 if (distance.sqrMagnitude > 0)
                 {
-                    float force = -GameVars.GravityConstant * otherBody.mass * myBody.mass / distance.sqrMagnitude;
+                    float multiplier = 1;
+                    if (otherBody.gameObject.CompareTag("Munition"))
+                    {
+                        multiplier = GameVars.munitionGravMult;
+                    }
+
+                    float force = -GameVars.GravityConstant * multiplier * otherBody.mass * myBody.mass / distance.sqrMagnitude;
                     otherBody.AddForce(distance.normalized * force);
                 }
             }

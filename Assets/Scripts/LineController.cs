@@ -28,10 +28,19 @@ public class LineController : MonoBehaviour
     private Color startColor;
     private Color endColor;
 
+    private float multiplier;
 
     public void buildObject(Rigidbody2D targetBody)
     {
         this.targetBody = targetBody;
+        if (targetBody.CompareTag("Munition"))
+        {
+            multiplier = GameVars.munitionGravMult;
+        }
+        else
+        {
+            multiplier = 1;
+        }
     }
 
     void Awake()
@@ -119,7 +128,7 @@ public class LineController : MonoBehaviour
         Vector3 gravContr = Vector3.zero;
         if (distance.magnitude > 0 && distance.magnitude < planetController.gravityRadius)
         {
-            float accel = GameVars.GravityConstant * planetBody.mass / distance.sqrMagnitude;
+            float accel = GameVars.GravityConstant * multiplier * planetBody.mass / distance.sqrMagnitude;
             gravContr = distance.normalized * accel;
         }
         return gravContr;

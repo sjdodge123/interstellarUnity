@@ -12,5 +12,7 @@ public class GameVars : MonoBehaviour {
     public static GameFactory GameFactory;
     public static GameController GameController;
 
+    public static float munitionGravMult = 10;
+
 
 }
