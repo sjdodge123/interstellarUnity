@@ -16,12 +16,6 @@ public class PlanetController : MonoBehaviour
         GameVars.Planets.Add(this);
     }
 
-    /*
-    void OnEnable()
-    {
-        GameVars.Camera.AddToCamera(gameObject);
-    }
-    */
     void FixedUpdate()
     {
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, gravityRadius);

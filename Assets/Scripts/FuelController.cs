@@ -58,7 +58,7 @@ public class FuelController : MonoBehaviour {
 
     public void BurnFuel(float vertical)
     {
-        var expectedFuel = currentFuel - burnRate * vertical * Time.deltaTime;
+        var expectedFuel = currentFuel - burnRate * Math.Abs(vertical) * Time.deltaTime;
         if (expectedFuel >= 0)
         {
             currentFuel = expectedFuel;

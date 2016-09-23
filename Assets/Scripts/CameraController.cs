@@ -60,14 +60,18 @@ public class CameraController : MonoBehaviour
     private void Move()
     {
         FindAveragePosition();
-
-        transform.position = Vector3.SmoothDamp(new Vector3(transform.position.x,transform.position.y,-10), m_DesiredPosition, ref m_MoveVelocity, m_DampTime);
+        transform.position = Vector3.SmoothDamp(new Vector3(transform.position.x, transform.position.y, -10), m_DesiredPosition, ref m_MoveVelocity, m_DampTime);
+        
+        
     }
-
 
     private void FindAveragePosition()
     {
         Vector3 averagePos = new Vector3();
+        float leftMost  = Mathf.Infinity;
+        float rightMost = Mathf.NegativeInfinity;
+        float botMost   = Mathf.Infinity;
+        float topMost   = Mathf.NegativeInfinity;
         int numTargets = 0;
 
         for (int i = 0; i < m_Targets.Count; i++)
@@ -77,21 +81,46 @@ public class CameraController : MonoBehaviour
 
             averagePos += m_Targets[i].transform.position;
             numTargets++;
+
+            leftMost  = Mathf.Min(leftMost, m_Targets[i].transform.position.x);
+            botMost   = Mathf.Min(botMost, m_Targets[i].transform.position.y);
+            rightMost = Mathf.Max(rightMost, m_Targets[i].transform.position.x);
+            topMost   = Mathf.Min(topMost, m_Targets[i].transform.position.y);
         }
 
         if (numTargets > 0)
             averagePos /= numTargets;
-    
         m_DesiredPosition = averagePos;
+        CheckPos(leftMost, rightMost, botMost, topMost);
     }
 
+    private void CheckPos(float leftMost, float rightMost, float botMost, float topMost)
+    {
+
+        if ((m_DesiredPosition.x + m_Camera.orthographicSize >= GameVars.MapWidth / 2))
+        {
+            m_DesiredPosition.x = ((GameVars.MapWidth / 2) + leftMost)/2;
+        }
+        if((m_DesiredPosition.x - m_Camera.orthographicSize <= -GameVars.MapWidth / 2))
+        {
+            m_DesiredPosition.x = ((-GameVars.MapWidth / 2) + rightMost) / 2;
+        }
+        if ((m_DesiredPosition.y + m_Camera.orthographicSize >= GameVars.MapHeight / 2))
+        {
+            m_DesiredPosition.y = ((GameVars.MapHeight/ 2) + botMost) / 2;
+        }
+        if((m_DesiredPosition.y - m_Camera.orthographicSize <= -GameVars.MapHeight / 2))
+        {
+            m_DesiredPosition.y = ((-GameVars.MapHeight / 2) + topMost) / 2;
+        }
+    }
 
     private void Zoom()
     {
         float requiredSize = FindRequiredSize();
+        requiredSize = checkZoom(requiredSize);
         m_Camera.orthographicSize = Mathf.SmoothDamp(m_Camera.orthographicSize, requiredSize, ref m_ZoomSpeed, m_DampTime);
     }
-
 
     private float FindRequiredSize()
     {
@@ -120,6 +149,18 @@ public class CameraController : MonoBehaviour
         return size;
     }
 
+    private float checkZoom(float desiredSize)
+    {
+        if ((m_DesiredPosition.x + desiredSize     >=  GameVars.MapWidth / 2) ||
+            (m_DesiredPosition.x - desiredSize     <= -GameVars.MapWidth / 2) ||
+            (m_DesiredPosition.y + desiredSize / 2 >=  GameVars.MapHeight / 2) ||
+            (m_DesiredPosition.y - desiredSize / 2 <= -GameVars.MapHeight / 2))
+        {
+            desiredSize = m_Camera.orthographicSize;
+        }
+        
+        return desiredSize;
+    }
 
     public void SetStartPositionAndSize()
     {

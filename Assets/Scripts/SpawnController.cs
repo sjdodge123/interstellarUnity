@@ -7,11 +7,10 @@ public class SpawnController : MonoBehaviour {
     public int quantity;
     public int spawnX;
     public int spawnY;
-    public int spawnWidth;
-    public int spawnHeight;
 
     public int minVelocity;
     public int maxVelocity;
+
 
     // Use this for initialization
     void Start () {
@@ -36,7 +35,7 @@ public class SpawnController : MonoBehaviour {
 
         for (var i = 0; i < quantity; i++)
         {
-            float spawnCushion = spawnWidth / (quantity * 2);
+            float spawnCushion = GameVars.MapWidth / (quantity * 2);
             var spawnLocation = generateSpawnLoc(i);
 
             for (var j = 0; j < players.Length; j++)
@@ -55,7 +54,7 @@ public class SpawnController : MonoBehaviour {
     {
         for (var i = 0; i < quantity; i++)
         {
-            var spawnRange = new Vector2(Random.Range(spawnX, spawnX + spawnWidth), Random.Range(spawnY, spawnY - spawnHeight));
+            var spawnRange = new Vector2(Random.Range(spawnX, spawnX + GameVars.MapWidth), Random.Range(spawnY, spawnY - GameVars.MapHeight));
             var velocity = Random.Range(minVelocity, maxVelocity);
             Vector2 unitVector = new Vector2(Random.Range(-1f, 1f), (Random.Range(-1f, 1f)));
             if (unitVector.sqrMagnitude == 0)
@@ -73,11 +72,11 @@ public class SpawnController : MonoBehaviour {
     }
     private Vector3 generateSpawnLoc(int objInt)
     {
-        float xLeftBound = spawnX + objInt * spawnWidth / quantity;
-        float xRightBount = xLeftBound + (objInt + 1) * spawnWidth / quantity;
+        float xLeftBound = spawnX + objInt * GameVars.MapWidth / quantity;
+        float xRightBount = xLeftBound + (objInt + 1) * GameVars.MapWidth / quantity;
 
-        float yUpBound = spawnY - objInt * spawnHeight / quantity;
-        float yBotBound = yUpBound - (objInt + 1) * spawnHeight / quantity;
+        float yUpBound = spawnY - objInt * GameVars.MapHeight / quantity;
+        float yBotBound = yUpBound - (objInt + 1) * GameVars.MapHeight / quantity;
 
         var spawnLocation = new Vector3(Random.Range(xLeftBound, xRightBount), Random.Range(yBotBound, yUpBound), 0);
 

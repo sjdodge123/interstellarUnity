@@ -161,6 +161,15 @@ public class ShipController : MonoBehaviour
         }
     }
 
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("GameBound"))
+        {
+            IDied();
+        }
+    }
+
+
     public Vector3 SpawnPosition
     {
         set { spawnPosition = value; }
