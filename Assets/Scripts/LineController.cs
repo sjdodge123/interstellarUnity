@@ -27,7 +27,7 @@ public class LineController : MonoBehaviour
     private bool rendering;
     private Color startColor;
     private Color endColor;
-
+    private int colLayerID;
     private float multiplier;
 
     public void buildObject(Rigidbody2D targetBody)
@@ -45,7 +45,8 @@ public class LineController : MonoBehaviour
 
     void Awake()
     {
-        lineRend = GetComponent<LineRenderer>();   
+        lineRend = GetComponent<LineRenderer>();
+        colLayerID = LayerMask.GetMask("Default");
     }
 
     public void FixedUpdate()
@@ -106,7 +107,7 @@ public class LineController : MonoBehaviour
             var lastPosition = position;
 
             position += velocity * timeDelta + gravContr * timeDelta * timeDelta;
-            RaycastHit2D cast = Physics2D.Linecast(lastPosition, position);
+            RaycastHit2D cast = Physics2D.Linecast(lastPosition, position, colLayerID);
             if (cast.collider != null && cast.rigidbody.gameObject.CompareTag("Planet"))
             {
                 collisionTrajectory = true;

@@ -21,7 +21,9 @@ public class PlanetController : MonoBehaviour
         Collider2D[] collisions = Physics2D.OverlapCircleAll(transform.position, gravityRadius);
         foreach (Collider2D coll in collisions)
         {
-            if(coll.gameObject.layer == 9) //ignore gravity layer
+            
+            
+            if (coll.gameObject.layer == 9) //ignore gravity layer
             {
                 continue;
             }
