@@ -11,12 +11,13 @@ public class SpawnController : MonoBehaviour {
     public int minVelocity;
     public int maxVelocity;
 
+    public bool overrideRandom;
 
     // Use this for initialization
     void Start () {
         if (spawnObject.CompareTag("Planet"))
         {
-            spawnPlanet();
+            spawnPlanet(overrideRandom);
         }
         else
         {
@@ -25,6 +26,8 @@ public class SpawnController : MonoBehaviour {
         
 
 	}
+    //random spawning of planets
+    //FIXME: Doesn't spawn things within the game bounds specified;
     private void spawnPlanet()
     {
         GameObject[] players = GameVars.GameController.players;
@@ -49,6 +52,32 @@ public class SpawnController : MonoBehaviour {
             }
             Instantiate(spawnObject, spawnLocation, Quaternion.identity);
         }
+    }
+
+    //spawn Planet override
+    //spawns 3 planets in a fixed location; Only used for prototyping
+    //FIXME: handle through UI.
+    private void spawnPlanet(bool fixPlan)
+    {
+        Vector3 spawnLoc = Vector3.zero;
+
+        //Planet Upper Left
+        spawnLoc.x = - GameVars.MapWidth/3;
+        spawnLoc.y = GameVars.MapHeight/3;
+        Instantiate(spawnObject, spawnLoc, Quaternion.identity);
+
+
+        //Planet Mid
+        spawnLoc.x = 0;
+        spawnLoc.y = 0;
+        Instantiate(spawnObject, spawnLoc, Quaternion.identity);
+
+
+        //Planet Lower Right
+        spawnLoc.x = GameVars.MapWidth / 3;
+        spawnLoc.y = -GameVars.MapHeight / 3;
+        Instantiate(spawnObject, spawnLoc, Quaternion.identity);
+
     }
     private void spawnOther()
     {

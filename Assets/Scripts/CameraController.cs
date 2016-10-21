@@ -16,6 +16,10 @@ public class CameraController : MonoBehaviour
     private Vector3 m_MoveVelocity;
     private bool edgeBound = false;
 
+    //bounds
+    private Vector2 boundsMin;
+    private Vector2 boundsMax;
+
     private Camera m_Camera;
 
     private void Awake()
@@ -26,11 +30,14 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
-        
+
         //for (var i = 0; i < GameVars.Planets.Count; i++)
         //{
         //    m_Targets.Add(GameVars.Planets[i].gameObject);
         //}
+        boundsMin = new Vector2(-GameVars.MapWidth / 2, -GameVars.MapHeight / 2);
+        boundsMax = new Vector2(GameVars.MapWidth / 2, GameVars.MapHeight / 2);
+
         for (var j = 0; j < GameVars.Ships.Count; j++)
         {
             m_Targets.Add(GameVars.Ships[j].gameObject);
@@ -90,60 +97,29 @@ public class CameraController : MonoBehaviour
     }
 
     private void CheckPos()
-    {   
-        
-        Vector3 temp = Vector3.one;
-        temp.z = m_DesiredPosition.z;
-        if ((m_DesiredPosition.x + m_DesiredSize >= GameVars.MapWidth / 2))
-        {
-            temp.x = GameVars.MapWidth / 2;
+    {
+        float vertExt = m_DesiredSize;
+        float horExt = m_Camera.aspect * m_DesiredSize;
 
-            m_DesiredPosition.x = m_DesiredPosition.x - (m_DesiredPosition.x + m_DesiredSize - temp.x);
-            //m_DesiredPosition.x = (temp + N * m_DesiredPosition) / (N + 1);
-            //m_DesiredSize = Mathf.Abs(m_DesiredPosition.x - GameVars.MapWidth / 2);
-            
-            edgeBound = true;
-            
-        }
-        
-        if((m_DesiredPosition.x - m_DesiredSize <= -GameVars.MapWidth / 2))
-        {
-            temp.x = -GameVars.MapWidth / 2;
-            
-            m_DesiredPosition.x = m_DesiredPosition.x - (m_DesiredPosition.x - m_DesiredSize - temp.x);
+        float leftBound = boundsMin.x + horExt;
+        float rightBound = boundsMax.x - horExt;
+        float bottomBound = boundsMin.x + vertExt;
+        float topBound = boundsMax.x - vertExt;
 
-            edgeBound = true;
-        }
-        
-        if ((m_DesiredPosition.y + m_DesiredSize >= GameVars.MapHeight / 2))
-        {
-            temp.y = GameVars.MapHeight / 2;
-            m_DesiredPosition.y = m_DesiredPosition.y - (m_DesiredPosition.y + m_DesiredSize - temp.y);
-
-            edgeBound = true;
-        }
-        
-        if((m_DesiredPosition.y - m_DesiredSize <= -GameVars.MapHeight / 2))
-        {
-            temp.y = -GameVars.MapHeight / 2;
-            m_DesiredPosition.y = m_DesiredPosition.y - (m_DesiredPosition.y - m_DesiredSize - temp.y);
-
-            edgeBound = true;
-            
-        }
-        edgeBound = false;
-        
+        m_DesiredPosition.x = Mathf.Clamp(m_DesiredPosition.x, leftBound, rightBound);
+        m_DesiredPosition.y = Mathf.Clamp(m_DesiredPosition.y, bottomBound, topBound);
     }
 
     private void Zoom()
     {
         
-        checkZoom();
+        //checkZoom();
         m_Camera.orthographicSize = Mathf.SmoothDamp(m_Camera.orthographicSize, m_DesiredSize, ref m_ZoomSpeed, m_DampTime);
     }
 
     void FindRequiredSize()
     {
+        //DEBUG: Perhaps local coordinates cause discrepancy between vertical and horizontal boundary behaviors
         Vector3 desiredLocalPos = transform.InverseTransformPoint(m_DesiredPosition);
         
         m_DesiredSize = 0;
@@ -170,18 +146,8 @@ public class CameraController : MonoBehaviour
 
     }
 
-    private void checkZoom()
+    void OnDrawGizmos()
     {
-        /*
-        if ((m_DesiredPosition.x + desiredSize     >=  GameVars.MapWidth / 2) ||
-            (m_DesiredPosition.x - desiredSize     <= -GameVars.MapWidth / 2) ||
-            (m_DesiredPosition.y + desiredSize / 2 >=  GameVars.MapHeight / 2) ||
-            (m_DesiredPosition.y - desiredSize / 2 <= -GameVars.MapHeight / 2))
-        {
-            desiredSize = m_Camera.orthographicSize;
-        }
-        
-        return desiredSize;
-        */
+        //Gizmos.DrawCube(Vector3.zero, new Vector3(GameVars.MapWidth, GameVars.MapHeight, 0));
     }
 }
