@@ -44,6 +44,9 @@ public class ShipController : MonoBehaviour
     private Component halo;
     private Rigidbody2D body;
     private Vector3 spawnPosition;
+
+    [SerializeField]
+    private Vector3 spawnVelocity;
     
 
 
@@ -85,6 +88,7 @@ public class ShipController : MonoBehaviour
     {
         GameVars.Camera.AddToCamera(gameObject);
         fuelController.resetFuel();
+        body.velocity = spawnVelocity;
     }
 
     void FixedUpdate()

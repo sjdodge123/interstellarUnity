@@ -5,17 +5,21 @@ using System;
 public class GameController : MonoBehaviour {
 
     private GameState currentGameState;
+    private GameObject gameBounds;
     public GameObject[] players;
-
+    
     public void Awake()
     {
         GameVars.GameController = this;
+        
     }
 
 	// Use this for initialization
 	void Start ()
     {
         currentGameState = GameVars.GameFactory.CreateMenuState().Activate();
+        BoxCollider2D gameBounds = GameObject.Find("GameBounds").GetComponent<BoxCollider2D>();
+        gameBounds.size = new Vector2(GameVars.MapWidth, GameVars.MapHeight);
     }
 
     // Update is called once per frame

@@ -77,7 +77,7 @@ public class Cannon : Weapon
 
     private Vector2 FindMunitionPosition()
     {
-        return portOrStar * this.transform.parent.right * 3 + this.transform.parent.position;
+        return portOrStar * this.transform.parent.right * 5 + this.transform.parent.position;
     }
     public void SetTrackingColor(Color startColor, Color endColor)
     {

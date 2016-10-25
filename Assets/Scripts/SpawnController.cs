@@ -62,20 +62,21 @@ public class SpawnController : MonoBehaviour {
         Vector3 spawnLoc = Vector3.zero;
 
         //Planet Upper Left
-        spawnLoc.x = - GameVars.MapWidth/3;
-        spawnLoc.y = GameVars.MapHeight/3;
+        spawnLoc.x = - GameVars.MapWidth / 5;
+        spawnLoc.y = GameVars.MapHeight / 5;
         Instantiate(spawnObject, spawnLoc, Quaternion.identity);
 
 
         //Planet Mid
+        /*
         spawnLoc.x = 0;
         spawnLoc.y = 0;
         Instantiate(spawnObject, spawnLoc, Quaternion.identity);
-
+        */
 
         //Planet Lower Right
-        spawnLoc.x = GameVars.MapWidth / 3;
-        spawnLoc.y = -GameVars.MapHeight / 3;
+        spawnLoc.x = GameVars.MapWidth / 5;
+        spawnLoc.y = -GameVars.MapHeight / 5;
         Instantiate(spawnObject, spawnLoc, Quaternion.identity);
 
     }
