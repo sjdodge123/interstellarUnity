@@ -30,7 +30,7 @@ public class GameFactory : MonoBehaviour {
     {
         Instantiate(timer);
     }
-
+    
     public PlayState CreatePlayState()
     {
         return new PlayState(centerText,playStateMap);

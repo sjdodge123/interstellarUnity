@@ -22,9 +22,8 @@ public class ShipController : MonoBehaviour
     
 
     public int playerNumber;
-
-    
-
+    public int lives;
+    public float respawnTime;
 
     public float pulseRate = 1F;
     public float nextPulse = 0.0F;
@@ -88,6 +87,7 @@ public class ShipController : MonoBehaviour
     {
         GameVars.Camera.AddToCamera(gameObject);
         fuelController.resetFuel();
+        transform.position = spawnPosition;
         body.velocity = spawnVelocity;
     }
 
@@ -207,6 +207,21 @@ public class ShipController : MonoBehaviour
 
     private void IDied()
     {
-        GameVars.GameController.SomethingDied(gameObject);
+        lives -= 1;
+        if (lives < 1)
+        {
+            GameVars.GameController.SomethingDied(gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            Invoke("Respawn", respawnTime);
+        }
+        
+    }
+    private void Respawn()
+    {
+        gameObject.SetActive(true);
     }
 }
+

@@ -14,7 +14,6 @@ public class CameraController : MonoBehaviour
     private Vector3 m_DesiredPosition;
     private float m_DesiredSize;
     private Vector3 m_MoveVelocity;
-    private bool edgeBound = false;
 
     //bounds
     private Vector2 boundsMin;
