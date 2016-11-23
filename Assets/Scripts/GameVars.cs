@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class GameVars : MonoBehaviour {
 
     public const float GravityConstant = 20000;
-    public const float MapWidth = 300;
-    public const float MapHeight = 300;
+    public const float MapWidth = 500;
+    public const float MapHeight = 500;
     public static List<ShipController> Ships = new List<ShipController>();
     public static List<PlanetController> Planets = new List<PlanetController>();
 

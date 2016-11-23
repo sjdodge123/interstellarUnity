@@ -72,13 +72,13 @@ public class ShipController : MonoBehaviour
         starWeaponController.Build(-90, playerColor);
 
         fuelController = gameObject.GetComponent<FuelController>();
-        fuelController.setColor(playerColor);
+        
     }
     public void Start()
     {
         lineController.setStartColor(playerColor);
         lineController.setEndColor(playerColor);
-        
+        fuelController.setColor(playerColor);
     }
 
 
